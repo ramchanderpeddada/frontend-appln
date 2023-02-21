@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -11,13 +12,13 @@ const Home = () => {
   }, []);
 
   const getUsers = async () => {
-    const response = await axios.get("http://localhost:3000/user");
+    const response = await axios.get("http://localhost:5000/users");
     setData(response.data);
   };
 
   const onDeleteUser = async (id) => {
     if (window.confirm("Are u sure?")) {
-      const response = await axios.delete(`http://localhost:3000/user/${id}`);
+      const response = await axios.delete(`http://localhost:5000/users/${id}`);
       console.log(id, "id");
       if (response.status === 200) {
         getUsers();
@@ -48,17 +49,31 @@ const Home = () => {
                     <td>{item.email}</td>
                     <td>{item.phone}</td>
                     <td>
-                      <Link to={`/update/${item._id}`}>
-                        <button className="btn btn-edit">Edit</button>
+                      <Link to={`/update/${item.id}`}>
+                        <Button color="success" size="small">
+                          Edit
+                        </Button>
                       </Link>
-                      <button
-                        className="btn btn-delete"
-                        onClick={() => onDeleteUser(item._id)}
+                      <Button
+                        color="error"
+                        size="small"
+                        onClick={() => onDeleteUser(item.id)}
                       >
                         Delete
-                      </button>
-                      <Link to={`/view/${item._id}`}>
-                        <button className="btn btn-view">View</button>
+                      </Button>
+                      <Link to={`/view/${item.id}`}>
+                        <Button className="btn btn-view" size="small">
+                          View
+                        </Button>
+                      </Link>
+                      <Link to={`/posts/${item.id}`}>
+                        <Button
+                          className="btn btn-addPost"
+                          size="small"
+                          color="secondary"
+                        >
+                          Add Post
+                        </Button>
                       </Link>
                     </td>
                   </tr>
@@ -67,7 +82,7 @@ const Home = () => {
           </tbody>
         </table>
       ) : (
-        <h1>No data found </h1>
+        <h1 style={{ textAlign: "center" }}>No data found </h1>
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+import { TextField, Button } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -24,15 +25,15 @@ const AddEdit = () => {
   }, [id]);
 
   const getSingleUser = async (id) => {
-    const response = await axios.get(`http://localhost:3000/user/${id}`);
+    const response = await axios.get(`http://localhost:5000/users/${id}`);
     setState(response.data);
   };
 
   const saveUser = async (id, data) => {
     const method = id ? "put" : "post";
     const url = id
-      ? `http://localhost:3000/user/${id}`
-      : "http://localhost:3000/user";
+      ? `http://localhost:5000/users/${id}`
+      : "http://localhost:5000/users";
     const response = await axios[method](url, data);
     alert(id ? "Updated Succesfully" : "Added succesfully");
     setState(response.data);
@@ -45,7 +46,7 @@ const AddEdit = () => {
     } else {
       try {
         await saveUser(id, state);
-        navigate("/");
+        navigate("/home");
       } catch (err) {
         console.error(err);
       }
@@ -65,33 +66,39 @@ const AddEdit = () => {
           padding: "15px",
           maxWidth: "400px",
           alignContent: "center",
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
         }}
         onSubmit={handleSubmit}
       >
         <label htmlFor="username">Username</label>
-        <input
+        <TextField
           type="text"
           name="username"
           placeholder="Enter Username..."
           onChange={handleInputChange}
           value={username}
         />
-        <input
+        <TextField
           type="email"
           name="email"
           placeholder="Enter email..."
           onChange={handleInputChange}
           value={email}
         />
-        <input
+        <TextField
           type="number"
           name="phone"
+          fullWidth
           placeholder="Enter phone..."
           onChange={handleInputChange}
           value={phone}
-          maxLength={10}
         />
-        <input type="submit" value={id ? "Update" : "Add"} />
+
+        <Button type="submit" color="primary" variant="contained">
+          {id ? "Update" : "Add"}
+        </Button>
       </form>
     </div>
   );
